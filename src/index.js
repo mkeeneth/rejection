@@ -4,25 +4,28 @@ import 'react-app-polyfill/ie11';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import { createStore } from 'redux';
+import { createStore, compose, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
-import throttle from 'lodash/throttle';
 import rootReducer from './reducers';
 import registerServiceWorker from './registerServiceWorker';
-
 import App from './containers/App';
-import { loadState, saveState } from './localStorage';
 
-const persistedState = loadState();
-const store = createStore(rootReducer, persistedState);
+/* eslint-disable no-underscore-dangle */
+let devTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
+if (process.env.NODE_ENV === 'prod' || process.env.NODE_ENV === 'production') {
+  devTools = a => a;
+}
 
-store.subscribe(
-  throttle(() => {
-    saveState({
-      history: store.getState().history,
-    });
-  }, 1000),
+const store = createStore(
+  rootReducer,
+  compose(
+    applyMiddleware(thunk),
+    /* ---- redux dev tools ----  */
+    devTools,
+  ),
 );
+/* eslint-enable */
 
 ReactDOM.render(
   <Provider store={store}>
