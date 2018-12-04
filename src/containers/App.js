@@ -74,14 +74,14 @@ export class App extends Component {
         <div style={{ display: loading ? 'none' : 'block' }}>
           <LoginButtons user={user} providers={providers} socket={socket} />
           <User user={user} logout={logout} />
-          <div className={user.name ? '' : 'hidden'}>
+          <div className={user.name ? 'mt-4' : 'hidden'}>
             <Heading history={history} />
             <div className="row">
-              <HistoryContainer {...this.props} />
               <div className="col-md-7 order-md-1">
                 <h4 className="mb-3">How long can you make your rejection streak last?</h4>
                 <MainFormFormik />
               </div>
+              <HistoryContainer {...this.props} />
             </div>
           </div>
         </div>
